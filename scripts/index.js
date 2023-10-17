@@ -1,10 +1,4 @@
-//--------------------------------CONSTANTS----------------------------------------------//
-// import {
-//     APPLE, SNAKE, WALL, APPLE_MAGNET, COIN_MAGNET, COIN, FREEZE, ON_WAY, DOOR, KEY, PORTAL, FINISH, FRENZY, GHOST,
-//     MOVING, IDLE, DEAD, APPLE_MAGNETIC, COIN_MAGNETIC, VICTORY, FROZEN,
-//     MAIN_MENU, ENDLESS, LEVELS, LEVEL, GAME_OVER,
-//     RESTART, SPEED, UNIT_SIZE, WIDTH, HEIGHT, TILE_WIDTH, TILE_HEIGHT, GAME_UNITS, BUTTON_HEIGHT, BUTTON_WIDTH, POWERUP_TIME, FREEZE_TIME
-// } from './constants';
+// import { APPLE } from './constants';
 const APPLE = "apple";
 const SNAKE = "snake";
 const WALL = "wall";
@@ -36,7 +30,6 @@ const APPLE_MAGNETIC = "apple magnetic";
 const COIN_MAGNETIC = "apple magnetic";
 const VICTORY = "victory";
 const FROZEN = "frozen"
-const NORMAL = "normal";
 
 const MAIN_MENU = "MAIN MENU";
 const ENDLESS = "ENDLESS";
@@ -55,8 +48,8 @@ const MAX__LEVEL_SCORE = MAX_LEVEL_COINS * POINTS_PER_COIN;
 
 
 const UNIT_SIZE = 20;
-const WIDTH = 600;
-const HEIGHT = 600;
+const WIDTH = 560;
+const HEIGHT = 560;
 const BLINK_FREQUENCY = 50;;
 const TILE_WIDTH = WIDTH / UNIT_SIZE;
 const TILE_HEIGHT = HEIGHT / UNIT_SIZE;
@@ -345,11 +338,16 @@ class AppleMagnetic extends SnakeState {
         super(snake, APPLE_MAGNETIC);
     }
     isObjectCollision(object) {
-        return object.type == APPLE && this.snake.x[0] >= object.x - this.appleRadius &&
-            this.snake.x[0] <= object.x + this.appleRadius &&
-            this.snake.y[0] >= object.y - this.appleRadius &&
-            this.snake.y[0] <= object.y + this.appleRadius;
+        if (object.type == APPLE) {
+            return this.snake.x[0] >= object.x - this.appleRadius &&
+                this.snake.x[0] <= object.x + this.appleRadius &&
+                this.snake.y[0] >= object.y - this.appleRadius &&
+                this.snake.y[0] <= object.y + this.appleRadius;
 
+        }
+        else {
+            return this.snake.x[0] == object.x == this.snake.y[0] == object.y
+        }
 
     }
     update() {
@@ -398,10 +396,16 @@ class CoinMagnetic extends SnakeState {
         super(snake, COIN_MAGNETIC);
     }
     isObjectCollision(object) {
-        return object.type == COIN && this.snake.x[0] >= object.x - this.appleRadius &&
-            this.snake.x[0] <= object.x + this.appleRadius &&
-            this.snake.y[0] >= object.y - this.appleRadius &&
-            this.snake.y[0] <= object.y + this.appleRadius;
+        if (object.type == COIN) {
+            return this.snake.x[0] >= object.x - this.appleRadius &&
+                this.snake.x[0] <= object.x + this.appleRadius &&
+                this.snake.y[0] >= object.y - this.appleRadius &&
+                this.snake.y[0] <= object.y + this.appleRadius;
+
+        }
+        else {
+            return this.snake.x[0] == object.x == this.snake.y[0] == object.y
+        }
 
 
     }
@@ -542,6 +546,7 @@ class LevelGameOver extends GameState {
 
         toggleScreen("level-game-over", true);
 
+
         this.draw(ctx);
 
         this.clearStars();
@@ -549,6 +554,8 @@ class LevelGameOver extends GameState {
             this.showStars();
 
     }
+
+
     drawStar(cx, cy, spikes, outerRadius, innerRadius, strokeColor, fillColor) {
         var rot = Math.PI / 2 * 3;
         var x = cx;
@@ -672,8 +679,8 @@ class Level extends GameState {
         this.map.update(ctx);
 
         //draw ui
-        this.drawApplesAndCoins(ctx);
-        this.drawScoreAndHighscore(ctx)
+        this.drawTopUI(ctx);
+        this.drawBottomUI(ctx)
 
         //check collisions
         this.map.checkCollisions();
@@ -683,22 +690,28 @@ class Level extends GameState {
 
     }
 
-    drawApplesAndCoins(ctx) {
+    drawTopUI(ctx) {
         ctx.save();
+
         ctx.fillStyle = WALL_COLOR;
         ctx.fillRect(0, canvas.height - 40, canvas.width, 30);
+
         ctx.fillStyle = "white";
         ctx.font = "18px Verdana";
+
         ctx.textAlign = "left"
-
         ctx.fillText("Apples: " + this.snake.applesCollected + "/" + this.levelData.numApples, 20, 30);
-        ctx.textAlign = "right"
 
+        ctx.textAlign = "center"
+        ctx.fillText("Level " + this.levelData.levelNum + ": " + this.levelData.title, canvas.width / 2, 30);
+
+        ctx.textAlign = "right"
         ctx.fillText("Coins: " + this.snake.coinsCollected + "/" + this.levelData.numCoins, canvas.width - 20, 30);
+
         ctx.restore();
     }
 
-    drawScoreAndHighscore(ctx) {
+    drawBottomUI(ctx) {
         ctx.save();
         ctx.fillStyle = "white";
         ctx.font = "18px Verdana";
@@ -760,12 +773,13 @@ class Level extends GameState {
 
     }
     didWin() {
+        console.log(this.snake.applesCollected == this.levelData.numApples)
         return this.snake.applesCollected == this.levelData.numApples;
     }
     onGameOver(didWin) {
         this.isGameOver = true;
         levels[currentLevel - 1].score = this.score;
-
+        console.log(didWin)
         if (didWin) {
             this.snake.changeState(new Victory(this.snake));
             if (this.score > (this.levelData?.highscore || 0)) {
@@ -781,7 +795,6 @@ class Level extends GameState {
 
     }
     handleCollision(other) {
-        console.log("handling collision");
         switch (other?.type) {
             case APPLE:
                 playSound(appleSound);
@@ -789,27 +802,23 @@ class Level extends GameState {
                 this.snake.grow(1);
                 this.snake.applesCollected++;
                 this.map.removeObject(other);
-                this.map.addObject(new Ground(other.x, other.y))
                 break;
             case COIN:
                 playSound(coinSound);
                 this.score += POINTS_PER_COIN;
                 this.map.removeObject(other);
                 this.snake.coinsCollected++;
-                this.map.addObject(new Ground(other.x, other.y))
 
                 break;
 
             case SNAKE:
             case WALL:
                 this.onGameOver(false);
-
                 break;
             case GHOST:
                 playSound(ghostSound)
                 this.map.removeObject(other);
                 this.snake.changeState(new GhostState(this.snake));
-                this.map.addObject(new Ground(other.x, other.y))
 
                 break;
             case FREEZE:
@@ -819,13 +828,11 @@ class Level extends GameState {
                 playSound(magnetSound);
                 this.map.removeObject(other);
                 this.snake.changeState(new AppleMagnetic(this.snake));
-                this.map.addObject(new Ground(other.x, other.y))
                 break;
             case COIN_MAGNET:
                 playSound(magnetSound);
                 this.map.removeObject(other);
                 this.snake.changeState(new CoinMagnetic(this.snake));
-                this.map.addObject(new Ground(other.x, other.y))
                 break;
 
 
@@ -1629,14 +1636,10 @@ class GameMap {
         return null;
     }
     checkCollisions() {
-        // var other = this.isOccupied(this.snake.x[0], this.snake.y[0]);
-        // if (other) {
-        //     game.currentState.handleCollision(other);
 
-        // }
         for (let i = 0; i < this.objects.length; i++) {
             if (this.snake.currentState.isObjectCollision(this.objects[i])) {
-
+                console.log("collided with " + this.objects[i].type)
                 game.currentState.handleCollision(this.objects[i]);
             }
 
@@ -1789,8 +1792,9 @@ function onRestartLevelPress() {
 
 }
 function onNextLevelPress() {
-    currentLevel++;
-    if (currentLevel <= LEVEL_COUNT) {
+
+    if (currentLevel < LEVEL_COUNT) {
+        currentLevel++;
         toggleScreen('level-game-over', false);
         game.changeState(new Level(levels[currentLevel - 1]));
     }
@@ -1804,10 +1808,10 @@ function main() {
     for (let i = 0; i < LEVEL_COUNT; i++) {
         const button = document.createElement("button");
         const node = document.createTextNode(i + 1);
-        button.style.width = "90px";
-        button.style.height = "90px";
+        button.style.width = "60px";
+        button.style.height = "60px";
         button.style.backgroundColor = "rgb(51,51,51)";
-        button.style.float = "left"
+        // button.style.float = "left"
 
         button.onclick = (e) => {
             toggleScreen("levels", false);

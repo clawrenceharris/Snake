@@ -75,7 +75,10 @@ let appleSound = document.querySelector('#apple-crunch');
 let ghostSound = document.querySelector('#ghost');
 let magnetSound = document.querySelector('#magnet');
 let coinSound = document.querySelector('#coin');
-let victorySound = document.querySelector('#victory');
+let victorySound = document.querySelector('#success');
+let frenzySound = document.querySelector("#success");
+let oneWaySound = document.querySelector("#one-way");
+let freezeSound = document.querySelector("#freeze");
 
 //--------------------------------SNAKE STATES----------------------------------------------//
 
@@ -822,7 +825,9 @@ class Level extends GameState {
 
                 break;
             case FREEZE:
+                playSound(freezeSound);
                 this.snake.changeState(new Frozen(this.snake));
+                this.map.removeObject(other);
                 break;
             case APPLE_MAGNET:
                 playSound(magnetSound);
@@ -838,6 +843,7 @@ class Level extends GameState {
 
             case ONE_WAY:
                 if (other.isOpen) {
+                    playSound(oneWaySound);
                     other.isOpen = false;
                 }
                 else {

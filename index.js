@@ -49,7 +49,7 @@ const MAX__LEVEL_SCORE = MAX_LEVEL_COINS * POINTS_PER_COIN;
 
 const UNIT_SIZE = 20;
 const WIDTH = 560;
-const HEIGHT = 560;
+const HEIGHT = 500;
 const BLINK_FREQUENCY = 50;;
 const TILE_WIDTH = WIDTH / UNIT_SIZE;
 const TILE_HEIGHT = HEIGHT / UNIT_SIZE;
@@ -346,7 +346,7 @@ class AppleMagnetic extends SnakeState {
 
         }
         else {
-            return this.snake.x[0] == object.x == this.snake.y[0] == object.y
+            return this.snake.x[0] == object.x && this.snake.y[0] == object.y
         }
 
     }
@@ -404,7 +404,7 @@ class CoinMagnetic extends SnakeState {
 
         }
         else {
-            return this.snake.x[0] == object.x == this.snake.y[0] == object.y
+            return this.snake.x[0] == object.x && this.snake.y[0] == object.y
         }
 
 
@@ -728,7 +728,7 @@ class Level extends GameState {
 
     drawGame(ctx) {
         ctx.fillStyle = GROUND_COLOR;
-        ctx.fillRect(canvas.width / 2 - this.levelData.width * UNIT_SIZE / 2, canvas.height / 2 - this.levelData.height * UNIT_SIZE / 2, this.levelData.width * UNIT_SIZE, this.levelData.height * UNIT_SIZE);
+        ctx.fillRect(canvas.width / 2 - WIDTH / 2, canvas.height / 2 - HEIGHT / 2, WIDTH, HEIGHT);
 
     }
     fillBorders() {
@@ -1492,7 +1492,7 @@ class Snake extends SnakeObject {
 
 class Spawner {
     timer = 0;
-    objects = new Array(Coin, Coin, Coin, CoinMagnet, AppleMagnet, Ghost, Freeze, Freeze)
+    objects = new Array(Coin, Coin, Coin, CoinMagnet, AppleMagnet, Ghost, Freeze, Freeze);
 
     constructor(map) {
         this.map = map;
@@ -1747,7 +1747,11 @@ function onKeyDown(event, game) {
 }
 
 //-----------------------------------MAIN-------------------------------------------//
-
+window.addEventListener("keydown", function (e) {
+    if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
+        e.preventDefault();
+    }
+}, false);
 
 function toggleScreen(id, show) {
     let element = document.getElementById(id);

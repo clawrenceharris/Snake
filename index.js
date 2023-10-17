@@ -1502,8 +1502,7 @@ class Snake extends SnakeObject {
 
 class Spawner {
     timer = 0;
-    //objects = new Array(Coin, Coin, Coin, CoinMagnet, AppleMagnet, Ghost, Freeze, Freeze);
-    objects = new Array(Frenzy);
+    objects = new Array(Coin, Coin, Coin, CoinMagnet, AppleMagnet, Ghost, Freeze, Freeze, Frenzy);
 
 
     constructor(map) {

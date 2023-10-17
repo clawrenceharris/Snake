@@ -654,7 +654,7 @@ class LevelGameOver extends GameState {
     }
 }
 let levels = [];
-fetch('../levels.json')
+fetch('levels.json')
     .then(response => response.json())
     .then(data => {
         levels = data.levels;

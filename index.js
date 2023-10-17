@@ -85,6 +85,7 @@ let frenzySound = document.querySelector("#frenzy");
 
 function playSound(sound) {
     try {
+        sound.volume = 0.40;
         sound.play();
     }
     catch (e) {
@@ -745,6 +746,8 @@ class Level extends GameState {
         }
     }
     fillMap() {
+
+
         for (let y = 0; y < this.levelData.map.length; y++) {
             for (let x = 0; x < this.levelData.map[0].length; x++) {
                 switch (this.levelData.map[y][x]) {
@@ -763,6 +766,7 @@ class Level extends GameState {
                     case "C":
                         this.map.addObject(new Coin(x + game.minX, y + game.minY));
                         break;
+
 
                 }
             }
@@ -853,7 +857,8 @@ class Level extends GameState {
                 }
                 break;
 
-
+            case PORTAL:
+                this.snake.setPosition(other.endPortal.x, other.endPortal.y);
             case FINISH:
                 this.onGameOver(this.didWin());
                 break;
@@ -864,28 +869,6 @@ class Level extends GameState {
 
 
 }
-// C = coin
-// 0 = empty
-// 1 = border
-// @ = player
-// 3 = apple
-// 4 = finish
-// 5 = freeze
-// 7 = ghost
-// P = portal 1a
-// p = portal 2a
-// W = portal 1b
-// w = portal 2b
-// Q = portal 1c
-// q = portal 2c
-// 6 = one way
-// D = door 1
-// d = door 2
-// b = door 3
-// K = key 1
-// k = key 2
-// y = key 3
-// E = enemy 1
 const level = [
 
 
@@ -1147,18 +1130,20 @@ class SnakeObject {
 
 
 }
-class Ground extends SnakeObject {
-    constructor(x, y) {
-        super(x, y, GROUND);
+
+class Portal extends SnakeObject {
+    static portalEntered;
+    constructor(x, y, id) {
+        super(x, y, PORTAL);
+
+
     }
-    update(ctx) {
-        this.draw(ctx);
+    setEndPortal(endPortal) {
+        this.endPortal = endPortal;
     }
-    draw(ctx) {
-        ctx.fillStyle = GROUND_COLOR;
-        ctx.fillRect(this.x * UNIT_SIZE, this.y * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE);
-    }
+
 }
+
 class Wall extends SnakeObject {
     constructor(x, y) {
         super(x, y, WALL);
@@ -1187,7 +1172,7 @@ class Finish extends SnakeObject {
     }
     draw(ctx) {
         ctx.fillStyle = 'white';
-        ctx.fillRect(this.x * UNIT_SIZE, this.y * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE);
+        ctx.fillRect(this.x * UNIT_SIZE, this.y * UNIT_SIZE, UNIT_SIZE - 1, UNIT_SIZE - 1);
     }
 }
 
@@ -1314,7 +1299,7 @@ class Apple extends SnakeObject {
 
     draw(ctx) {
         ctx.fillStyle = APPLE_COLOR;
-        ctx.fillRect(this.x * UNIT_SIZE, this.y * UNIT_SIZE - 1, UNIT_SIZE, UNIT_SIZE - 1);
+        ctx.fillRect(this.x * UNIT_SIZE, this.y * UNIT_SIZE - 1, UNIT_SIZE - 1, UNIT_SIZE - 1);
     }
 
 }

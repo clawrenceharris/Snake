@@ -75,10 +75,10 @@ let appleSound = document.querySelector('#apple-crunch');
 let ghostSound = document.querySelector('#ghost');
 let magnetSound = document.querySelector('#magnet');
 let coinSound = document.querySelector('#coin');
-let victorySound = document.querySelector('#success');
-let frenzySound = document.querySelector("#success");
+let victorySound = document.querySelector("#victory");
 let oneWaySound = document.querySelector("#one-way");
 let freezeSound = document.querySelector("#freeze");
+let frenzySound = document.querySelector("#frenzy");
 
 //--------------------------------SNAKE STATES----------------------------------------------//
 
@@ -88,7 +88,7 @@ function playSound(sound) {
         sound.play();
     }
     catch (e) {
-        console.log(e)
+        console.log(e);
     }
 }
 
@@ -107,7 +107,7 @@ class SnakeState {
 
     drawHead(ctx) {
         //draws head
-        ctx.fillStyle = this.snake.headColor
+        ctx.fillStyle = this.snake.headColor;
         ctx.fillRect(this.snake.x[0] * UNIT_SIZE, this.snake.y[0] * UNIT_SIZE, UNIT_SIZE - 1, UNIT_SIZE - 1);
 
     }
@@ -147,6 +147,7 @@ class SnakeState {
 class Victory extends SnakeState {
     constructor(snake) {
         super(snake, VICTORY);
+        playSound(victorySound);
     }
     update() {
         this.snake.moveBody();
@@ -784,6 +785,7 @@ class Level extends GameState {
         levels[currentLevel - 1].score = this.score;
         console.log(didWin)
         if (didWin) {
+
             this.snake.changeState(new Victory(this.snake));
             if (this.score > (this.levelData?.highscore || 0)) {
                 levels[currentLevel - 1].highscore = this.score;
@@ -1090,6 +1092,7 @@ class Endless extends GameState {
                 this.snake.changeState(new GhostState(this.snake));
                 break;
             case FREEZE:
+                playSound(freezeSound);
                 this.map.removeObject(other);
                 this.snake.changeState(new Frozen(this.snake));
                 break;
@@ -1104,6 +1107,7 @@ class Endless extends GameState {
                 this.snake.changeState(new CoinMagnetic(this.snake));
                 break;
             case FRENZY:
+                playSound(frenzySound);
                 this.map.removeObject(other);
                 this.snake.changeState(new FrenzyState(this.snake));
                 break;
@@ -1498,7 +1502,9 @@ class Snake extends SnakeObject {
 
 class Spawner {
     timer = 0;
-    objects = new Array(Coin, Coin, Coin, CoinMagnet, AppleMagnet, Ghost, Freeze, Freeze);
+    //objects = new Array(Coin, Coin, Coin, CoinMagnet, AppleMagnet, Ghost, Freeze, Freeze);
+    objects = new Array(Frenzy);
+
 
     constructor(map) {
         this.map = map;

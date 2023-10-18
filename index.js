@@ -153,14 +153,20 @@ class Victory extends SnakeState {
     update() {
         this.snake.moveBody();
     }
-
-    draw(ctx) {
+    drawHead(ctx) {
         let randomR = Math.floor(Math.random() * 255);
         let randomG = Math.floor(Math.random() * 255);
         let randomB = Math.floor(Math.random() * 255);
         this.snake.headColor = "rgb(" + randomR + "," + randomG + "," + randomB + ")";
+        ctx.fillStyle = this.snake.headColor;
+        ctx.fillRect(this.snake.x[0] * UNIT_SIZE, this.snake.y[0] * UNIT_SIZE, UNIT_SIZE - 1, UNIT_SIZE - 1)
+
+    }
+
+    draw(ctx) {
         this.drawBody(ctx);
         this.drawHead(ctx);
+
     }
     isBodyCollision() {
         false;
@@ -551,13 +557,16 @@ class LevelGameOver extends GameState {
 
         toggleScreen("level-game-over", true);
 
-        this.snake.update(ctx);
-        this.draw(ctx);
+
 
         this.clearStars();
-        if (didWin)
-            this.showStars();
+        this.draw(ctx);
 
+
+    }
+
+    update() {
+        this.snake.drawHead(ctx);
     }
 
 
@@ -591,7 +600,7 @@ class LevelGameOver extends GameState {
 
     }
 
-    showStars() {
+    drawStars() {
         let numStars = 0;
 
         let coinPercentage = this.snake.coinsCollected / this.levelData.numCoins * 100;
@@ -610,12 +619,12 @@ class LevelGameOver extends GameState {
             numStars = 3;
         }
         for (let i = 0; i < 3; i++) {
-            this.drawStar(canvas.width / 2 + (i * 50) - 3 * 15, canvas.height / 2 - BUTTON_HEIGHT * 2.5, 5, 15, 10, 'gray', 'lightgray')
+            this.drawStar(canvas.width / 2 + (i * 50) - 3 * 15, canvas.height / 2 - 100, 5, 15, 10, 'gray', 'lightgray')
 
         }
         for (let i = 0; i < numStars; i++) {
 
-            this.drawStar(canvas.width / 2 + (i * 50) - 3 * 15, canvas.height / 2 - BUTTON_HEIGHT * 2.5, 5, 15, 10)
+            this.drawStar(canvas.width / 2 + (i * 50) - 3 * 15, canvas.height / 2 - 100, 5, 15, 10)
 
         }
 
@@ -635,17 +644,22 @@ class LevelGameOver extends GameState {
     }
 
     draw(ctx) {
+
         ctx.fillStyle = "white";
         ctx.textAlign = "center"
         ctx.font = "22px sans-serif";
         if (this.didWin) {
-            ctx.fillText("LEVEL COMPLETE", canvas.width / 2, canvas.height / 2 - BUTTON_HEIGHT * 3.5 - 30);
-            ctx.fillText("Score: " + this.score, canvas.width / 2, canvas.height / 2 - BUTTON_HEIGHT * 3.5);
+            ctx.fillText("LEVEL COMPLETE", canvas.width / 2, canvas.height / 2 - 180);
+            ctx.fillText("Score: " + this.score, canvas.width / 2, canvas.height / 2 - 180 + 30);
+            this.drawStars();
 
         }
         else {
             ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - BUTTON_HEIGHT * 3);
         }
+
+
+
 
 
 
@@ -1448,7 +1462,13 @@ class Snake extends SnakeObject {
     setChangeX() {
 
     }
+    drawHead(ctx) {
+        this.currentState.drawHead(ctx);
+    }
+    drawBody(ctx) {
+        this.currentState.drawBody(ctx);
 
+    }
     update(ctx) {
         this.currentState.update();
 

@@ -747,7 +747,10 @@ class Level extends GameState {
     }
     fillMap() {
 
-
+        // C = coin 0 = empty 1 = wall  3 = apple 4 = finish
+        // 5 = freeze 7 = ghost P = portal 1a p = portal 2a W = portal 1b  w = portal 2b
+        // Q = portal 3a  q = portal 3b 6 = one way D = door 1 d = door  b = door 3
+        // K = key  k = key  y = key E = enemy 1
         for (let y = 0; y < this.levelData.map.length; y++) {
             for (let x = 0; x < this.levelData.map[0].length; x++) {
                 switch (this.levelData.map[y][x]) {
@@ -1406,7 +1409,7 @@ class Freeze extends SnakeObject {
         ctx.strokeStyle = FREEZE_COLOR;
         ctx.stroke();
 
-        ctx.strokeRect(this.x * UNIT_SIZE, this.y * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE);
+        ctx.strokeRect(this.x * UNIT_SIZE, this.y * UNIT_SIZE, UNIT_SIZE - 1, UNIT_SIZE - 1);
         ctx.restore();
 
 

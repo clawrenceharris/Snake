@@ -551,7 +551,7 @@ class LevelGameOver extends GameState {
 
         toggleScreen("level-game-over", true);
 
-
+        this.snake.update(ctx);
         this.draw(ctx);
 
         this.clearStars();
@@ -633,10 +633,7 @@ class LevelGameOver extends GameState {
             }
         }
     }
-    update() {
 
-        this.snake.update(ctx);
-    }
     draw(ctx) {
         ctx.fillStyle = "white";
         ctx.textAlign = "center"

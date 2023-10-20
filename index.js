@@ -1156,6 +1156,18 @@ class Portal extends SnakeObject {
         this.endPortal = endPortal;
     }
 
+    update(ctx) {
+        this.draw(ctx)
+    }
+
+    draw(ctx) {
+        ctx.strokeStyle = "pink";
+        ctx.strokeRect(this.x * UNIT_SIZE, this.y * UNIT_SIZE, UNIT_SIZE + 2, UNIT_SIZE);
+        ctx.strokeRect(this.x * UNIT_SIZE, this.y * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE);
+        ctx.strokeRect(this.x * UNIT_SIZE, this.y * UNIT_SIZE, UNIT_SIZE - 2, UNIT_SIZE - 2);
+
+    }
+
 }
 
 class Wall extends SnakeObject {
@@ -1763,6 +1775,22 @@ function onKeyDown(event, game) {
 }
 
 //-----------------------------------MAIN-------------------------------------------//
+function detectMobile() {
+    const toMatch = [
+        /Android/i,
+        /webOS/i,
+        /iPhone/i,
+        /iPad/i,
+        /iPod/i,
+        /BlackBerry/i,
+        /Windows Phone/i
+    ];
+
+    return toMatch.some((toMatchItem) => {
+        return navigator.userAgent.match(toMatchItem);
+    });
+}
+
 window.addEventListener("keydown", function (e) {
     if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
         e.preventDefault();
@@ -1824,7 +1852,10 @@ function main() {
     toggleScreen("game-over", false);
     toggleScreen("level-game-over", false);
     toggleScreen("levels", false);
-
+    if (detectMobile() == true) {
+        canvas.width = "50%"
+        canvas.height = canvas.width * 0.5;
+    }
     for (let i = 0; i < LEVEL_COUNT; i++) {
         const button = document.createElement("button");
         const node = document.createTextNode(i + 1);

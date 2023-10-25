@@ -14,7 +14,7 @@ const FINISH = "finish";
 const FRENZY = "frenzy";
 const GHOST = "ghost";
 const GROUND = "ground";
-
+const FONTFACE = "Verdana";
 const FREEZE_COLOR = "rgb(0,174,239)";
 const APPLE_COLOR = "rgb(255,0,0)";
 const COIN_COLOR = "rgb(254,214,49)";
@@ -36,11 +36,16 @@ const ENDLESS = "ENDLESS";
 const LEVELS = "LEVELS";
 const LEVEL = "LEVEL";
 const GAME_OVER = "GAME OVER";
-const RESTART = "PLAY AGAIN";
 const LEVEL_GAME_OVER = "level game over";
+const HELP = "HELP"
+
+
+const RESTART = "PLAY AGAIN";
+
+
 const SPEED = 9;
 const LEVEL_COUNT = 15;
-const POINTS_PER_COIN = 100;
+const POINTS_PER_COIN = 50;
 const POINTS_PER_APPLE = 6;
 
 const MAX_LEVEL_COINS = 3;
@@ -64,7 +69,7 @@ const FREEZE_TIME = 40;
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext('2d');
-
+const isMobile = detectMobile();
 let bestLength = 0;
 let highscore = 0;
 
@@ -79,7 +84,7 @@ let victorySound = document.querySelector("#victory");
 let oneWaySound = document.querySelector("#one-way");
 let freezeSound = document.querySelector("#freeze");
 let frenzySound = document.querySelector("#frenzy");
-
+let keySound = document.querySelector("#key")
 //--------------------------------SNAKE STATES----------------------------------------------//
 
 
@@ -89,7 +94,7 @@ function playSound(sound) {
         sound.play();
     }
     catch (e) {
-        console.log(e);
+        console.error(e);
     }
 }
 
@@ -295,7 +300,7 @@ class FrenzyState extends SnakeState {
 
 
 
-        speed = 20;
+        speed = 15;
         this.time++;
         if (this.time >= Frenzy.maxTime) {
             speed = SPEED;
@@ -501,9 +506,169 @@ class GameState {
 
 }
 
+class HelpA extends GameState {
+    constructor() {
+        super(HELP);
+        let apple = new Apple(2, 6);
+        let coin = new Coin(2, 9);
+        let freeze = new Freeze(2, 12);
+        let ghost = new Ghost(2, 15);
+        let appleMagnet = new AppleMagnet(2, 18);
+        let coinMagnet = new CoinMagnet(2, 21);
+        let frenzy = new Frenzy(2, 24);
+
+        this.objects = new Array(apple, coin, freeze, ghost, appleMagnet, coinMagnet, frenzy);
+    }
+
+    update() {
+        this.drawBG(ctx);
+        for (let i = 0; i < this.objects.length; i++) {
+            this.objects[i].update(ctx);
+
+        }
+        this.draw(ctx)
+
+    }
+    draw(ctx) {
+
+        ctx.fillStyle = "white";
+        ctx.font = "18px " + FONTFACE;
+        ctx.textAlign = "center"
+
+        ctx.fillText("HOW TO PLAY", canvas.width / 2, 30);
+
+        ctx.font = "14px " + FONTFACE;
+        ctx.textAlign = "center"
+
+        var x = canvas.width / 2;
+        var y = 3 * UNIT_SIZE + 14;
+
+
+        var lastY = wrapText(ctx, "Use the arrow keys to move the snake. Hit your own snake body or a Wall,", x, y, canvas.width - 20);
+        wrapText(ctx, "and it's game over!", x, lastY + 20, canvas.width - 20);
+
+        ctx.textAlign = "left"
+
+
+        var x = 2 * UNIT_SIZE + UNIT_SIZE + 20;
+        var y = 6 * UNIT_SIZE + 14;
+
+
+        var lastY = wrapText(ctx, "Apple: Eat an Apple to grow your snake body and", x, y, canvas.width - 20);
+        wrapText(ctx, "increase your score by " + POINTS_PER_APPLE + " points.", x, lastY + 20, canvas.width - 20);
+
+        var y = 9 * UNIT_SIZE + 14;
+        wrapText(ctx, "Coin: Collecting a Coin increases your score by " + POINTS_PER_COIN + " points.", x, y, canvas.width - 20);
+
+        var y = 12 * UNIT_SIZE + 14;
+
+        var lastY = wrapText(ctx, "Freeze: Entering a Freeze stops the snake head in place, while the ", x, y, canvas.width - 20);
+        wrapText(ctx, "body keeps moving!", x, lastY + 20, canvas.width - 20);
+
+        var y = 15 * UNIT_SIZE + 14;
+
+        var lastY = wrapText(ctx, "Ghost: Pick up a Ghost to move through your snake ", x, y, canvas.width - 20);
+
+        wrapText(ctx, "body without dying!", x, lastY + 20, canvas.width - 20);
+
+        var y = 18 * UNIT_SIZE + 14;
+
+        var lastY = wrapText(ctx, "Apple Magnet: When you pick up an Apple Magnet, you can eat ", x, y, canvas.width - 30);
+        wrapText(ctx, "apples from a distance.", x, lastY + 20, canvas.width - 20);
+
+        var y = 21 * UNIT_SIZE + 14;
+
+        var lastY = wrapText(ctx, "Coin Magnet: When you pick up a Coin Magnet, you can collect ", x, y, canvas.width - 20);
+        wrapText(ctx, "coins from a distance.", x, lastY + 20, canvas.width - 20);
+
+        var y = 24 * UNIT_SIZE + 14;
+
+        var lastY = wrapText(ctx, "Apple Frenzy: Randomly spawns a bunch of apples everywhere ", x, y, canvas.width - 20);
+        wrapText(ctx, "and allows you to move through your snake body without dying.", x, lastY + 20, canvas.width - 20);
 
 
 
+    }
+}
+
+
+class HelpB extends GameState {
+    constructor() {
+        super(HELP);
+
+        let oneWay = new OneWay(2, 6);
+        let finish = new Finish(2, 9)
+        this.objects = new Array(oneWay, finish);
+    }
+
+    update() {
+        this.drawBG(ctx);
+        for (let i = 0; i < this.objects.length; i++) {
+            this.objects[i].update(ctx);
+
+        }
+        this.draw(ctx)
+
+    }
+    draw(ctx) {
+
+        ctx.fillStyle = "white";
+        ctx.font = "18px " + FONTFACE;
+        ctx.textAlign = "center"
+
+        ctx.fillText("HOW TO PLAY", canvas.width / 2, 30);
+
+        ctx.font = "14px " + FONTFACE;
+        ctx.textAlign = "center"
+
+        var x = canvas.width / 2;
+        var y = 3 * UNIT_SIZE + 14;
+
+
+        var lastY = wrapText(ctx, "Use the arrow keys to move the snake. Hit your own snake body or a Wall,", x, y, canvas.width - 20);
+        wrapText(ctx, "and it's game over!", x, lastY + 20, canvas.width - 20);
+
+        ctx.textAlign = "left"
+
+
+        var x = 4 * UNIT_SIZE;
+        var y = 6 * UNIT_SIZE + 14;
+
+
+        var lastY = wrapText(ctx, "One-way: You can pass through a One-way only once ", x, y, canvas.width - 20);
+        wrapText(ctx, "before it turns into a Wall.", x, lastY + 20, canvas.width - 20);
+
+        var y = 9 * UNIT_SIZE + 14;
+
+
+        var lastY = wrapText(ctx, "Finish: Reach the Finish to complete a Level. To win, all ", x, y, canvas.width - 20);
+        wrapText(ctx, "Apples in the level must be eaten beofre crossing the Finish", x, lastY + 20, canvas.width - 20);
+
+    }
+}
+
+function wrapText(ctx, text, x, y, maxWidth, fontSize) {
+    var words = text.split(' ');
+    var line = '';
+    var lineHeight = fontSize;
+
+
+    for (var n = 0; n < words.length; n++) {
+        var testLine = line + words[n] + ' ';
+        var metrics = ctx.measureText(testLine);
+        var testWidth = metrics.width;
+        if (testWidth > maxWidth) {
+            ctx.fillText(line, x, y);
+            line = words[n] + ' ';
+            y += lineHeight;
+        }
+        else {
+            line = testLine;
+        }
+    }
+    ctx.fillText(line, x, y);
+    return (y);
+}
 class MainMenu extends GameState {
     constructor() {
         super(MAIN_MENU);
@@ -536,7 +701,7 @@ class GameOver extends GameState {
     draw(ctx) {
         ctx.fillStyle = "white";
         ctx.textAlign = "center"
-        ctx.font = "22px sans-serif";
+        ctx.font = "22px " + FONTFACE;
         ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - BUTTON_HEIGHT * 3);
         ctx.fillText("Length: " + this.snake.length, canvas.width / 2, canvas.height / 2 - BUTTON_HEIGHT * 3 + 30);
 
@@ -619,12 +784,12 @@ class LevelGameOver extends GameState {
             numStars = 3;
         }
         for (let i = 0; i < 3; i++) {
-            this.drawStar(canvas.width / 2 + (i * 50) - 3 * 15, canvas.height / 2 - 100, 5, 15, 10, 'gray', 'lightgray')
+            this.drawStar(canvas.width / 2 + (i * 50) - 3 * 15, canvas.height / 2 - 130, 5, 15, 10, 'gray', 'lightgray')
 
         }
         for (let i = 0; i < numStars; i++) {
 
-            this.drawStar(canvas.width / 2 + (i * 50) - 3 * 15, canvas.height / 2 - 100, 5, 15, 10)
+            this.drawStar(canvas.width / 2 + (i * 50) - 3 * 15, canvas.height / 2 - 130, 5, 15, 10)
 
         }
 
@@ -647,10 +812,10 @@ class LevelGameOver extends GameState {
 
         ctx.fillStyle = "white";
         ctx.textAlign = "center"
-        ctx.font = "22px sans-serif";
+        ctx.font = "22px " + FONTFACE;
         if (this.didWin) {
-            ctx.fillText("LEVEL COMPLETE", canvas.width / 2, canvas.height / 2 - 180);
-            ctx.fillText("Score: " + this.score, canvas.width / 2, canvas.height / 2 - 180 + 30);
+            ctx.fillText("LEVEL COMPLETE", canvas.width / 2, canvas.height / 2 - 200);
+            ctx.fillText("Score: " + this.score, canvas.width / 2, canvas.height / 2 - 200 + 30);
             this.drawStars();
 
         }
@@ -713,7 +878,7 @@ class Level extends GameState {
         ctx.fillRect(0, canvas.height - 40, canvas.width, 30);
 
         ctx.fillStyle = "white";
-        ctx.font = "18px Verdana";
+        ctx.font = "18px " + FONTFACE;
 
         ctx.textAlign = "left"
         ctx.fillText("Apples: " + this.snake.applesCollected + "/" + this.levelData.numApples, 20, 30);
@@ -730,7 +895,7 @@ class Level extends GameState {
     drawBottomUI(ctx) {
         ctx.save();
         ctx.fillStyle = "white";
-        ctx.font = "18px Verdana";
+        ctx.font = "18px " + FONTFACE;
         ctx.textAlign = "left"
         ctx.fillText("Score: " + this.score, 20, canvas.height - 20);
         ctx.textAlign = "right"
@@ -747,7 +912,7 @@ class Level extends GameState {
         ctx.fillRect(canvas.width / 2 - WIDTH / 2, canvas.height / 2 - HEIGHT / 2, WIDTH, HEIGHT);
 
     }
-    fillBorders() {
+    fillWals() {
         for (let y = 0; y < this.levelData.map.length; y++) {
             for (let x = 0; x < this.levelData.map[0].length; x++) {
                 if (this.levelData.map[y][x] == "1") {
@@ -760,8 +925,8 @@ class Level extends GameState {
 
         // C = coin 0 = empty 1 = wall  3 = apple 4 = finish
         // 5 = freeze 7 = ghost P = portal 1a p = portal 2a W = portal 1b  w = portal 2b
-        // Q = portal 3a  q = portal 3b 6 = one way D = door 1 d = door  b = door 3
-        // K = key  k = key  y = key E = enemy 1
+        // Q = portal 3a  q = portal 3b 6 = one way D = door1 d = door2  b = door3
+        // K = key1  k = key2  y = key3 E = enemy 1
         for (let y = 0; y < this.levelData.map.length; y++) {
             for (let x = 0; x < this.levelData.map[0].length; x++) {
                 switch (this.levelData.map[y][x]) {
@@ -780,6 +945,20 @@ class Level extends GameState {
                     case "C":
                         this.map.addObject(new Coin(x + game.minX, y + game.minY));
                         break;
+                    case "D":
+                        this.map.addObject(new Door(x + game.minX, y + game.minY, "green"));
+                        break;
+                    case "d":
+                        this.map.addObject(new Door(x + game.minX, y + game.minY, "pink"));
+                        break;
+                    case "K":
+                        this.map.addObject(new Key(x + game.minX, y + game.minY, "green"));
+                        break;
+
+                    case "k":
+                        this.map.addObject(new Key(x + game.minX, y + game.minY, "pink"));
+                        break;
+
 
 
                 }
@@ -789,19 +968,17 @@ class Level extends GameState {
     startGame() {
         this.snake = new Snake(this.levelData.snakeX + game.minX, this.levelData.snakeY + game.minY, this.levelData.startLength);
         this.map = new GameMap(this.snake);
-        this.fillBorders();
+        this.fillWals();
         this.fillMap();
 
 
     }
     didWin() {
-        console.log(this.snake.applesCollected == this.levelData.numApples)
         return this.snake.applesCollected == this.levelData.numApples;
     }
     onGameOver(didWin) {
         this.isGameOver = true;
         levels[currentLevel - 1].score = this.score;
-        console.log(didWin)
         if (didWin) {
 
             this.snake.changeState(new Victory(this.snake));
@@ -873,6 +1050,16 @@ class Level extends GameState {
 
             case PORTAL:
                 this.snake.setPosition(other.endPortal.x, other.endPortal.y);
+            case DOOR:
+
+                if (!other.isOpen) {
+                    this.onGameOver(false);
+                }
+                break;
+            case KEY:
+                playSound(keySound);
+                Door.unlock(other.color);
+                break;
             case FINISH:
                 this.onGameOver(this.didWin());
                 break;
@@ -961,6 +1148,7 @@ class Endless extends GameState {
     }
     startGame() {
         this.snake = new Snake(Math.round(canvas.width / 2 / UNIT_SIZE), Math.round(canvas.height / 2 / UNIT_SIZE));
+
         this.map = new GameMap(this.snake);
         this.spawner = new Spawner(this.map);
         var apple = this.spawner.spawnApple();
@@ -972,10 +1160,10 @@ class Endless extends GameState {
 
     drawLengthAndScore(ctx) {
         ctx.save();
-        ctx.fillStyle = WALL_COLOR;
-        ctx.fillRect(0, canvas.height - 40, canvas.width, 30);
+        // ctx.fillStyle = WALL_COLOR;
+        // ctx.fillRect(0, 0, canvas.width, 50);
         ctx.fillStyle = "white";
-        ctx.font = "18px Verdana";
+        ctx.font = "18px " + FONTFACE;
         ctx.textAlign = "left"
 
         ctx.fillText("Length: " + this.snake.length, 20, 30);
@@ -987,8 +1175,12 @@ class Endless extends GameState {
 
     drawHighscore(ctx) {
         ctx.save();
+        // ctx.fillStyle = WALL_COLOR;
+
+        // ctx.fillRect(0, canvas.height - 40, canvas.width, 30);
+
         ctx.fillStyle = "white";
-        ctx.font = "18px Verdana";
+        ctx.font = "18px " + FONTFACE;
         ctx.textAlign = "left"
         ctx.fillText("Best Length: " + bestLength, 20, canvas.height - 20);
         ctx.textAlign = "right"
@@ -1000,7 +1192,7 @@ class Endless extends GameState {
     }
 
     drawGame(ctx) {
-        ctx.fillStyle = GROUND_COLOR
+        ctx.fillStyle = GROUND_COLOR;
         ctx.fillRect(canvas.width / 2 - WIDTH / 2, canvas.height / 2 - HEIGHT / 2, WIDTH, HEIGHT);
 
     }
@@ -1021,7 +1213,7 @@ class Endless extends GameState {
         if (this.snake.currentState.type == FRENZY) {
 
             let position = this.map.getRandomEmptyPosition();
-            let apple = new Apple(position.x, position.y);
+            let apple = new Apple(position.x, position.y, true);
             this.frenzyApples.push(apple);
             this.map.addObject(apple);
 
@@ -1067,9 +1259,18 @@ class Endless extends GameState {
         switch (other?.type) {
             case APPLE:
                 playSound(appleSound);
-                this.score += 6
-                this.spawner.repositionApple();
-                this.snake.grow();
+                this.score += POINTS_PER_APPLE
+                if (other.isFrenzyApple) {
+                    this.map.removeObject(other);
+
+                }
+                else {
+                    this.spawner.repositionApple();
+                }
+
+
+
+                this.snake.grow(4);
                 break;
             case COIN:
                 playSound(coinSound);
@@ -1106,6 +1307,7 @@ class Endless extends GameState {
             case FRENZY:
                 playSound(frenzySound);
                 this.map.removeObject(other);
+                this.map.removeAllObjects();
                 this.snake.changeState(new FrenzyState(this.snake));
                 break;
 
@@ -1230,6 +1432,67 @@ class OneWay extends SnakeObject {
 
 }
 
+class Door extends SnakeObject {
+    static doors = [];
+    constructor(x, y, color, isOpen = false) {
+        super(x, y, DOOR);
+        this.isOpen = isOpen;
+        this.color = color;
+        Door.doors.push(this);
+    }
+
+    update(ctx) {
+        this.draw(ctx);
+    }
+    static unlock(color) {
+        for (let i = 0; i < Door.doors.length; i++) {
+            if (Door.doors[i].color == color) {
+                Door.doors[i].isOpen = true;
+            }
+        }
+
+    }
+    draw(ctx) {
+
+        if (this.isOpen) {
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = this.color;
+            ctx.strokeRect(this.x * UNIT_SIZE, this.y * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE);
+        }
+        else {
+
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x * UNIT_SIZE, this.y * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE);
+
+        }
+    }
+}
+
+class Key extends SnakeObject {
+    constructor(x, y, color) {
+        super(x, y, KEY);
+
+        this.color = color;
+    }
+
+    update(ctx) {
+        this.draw(ctx);
+    }
+
+    draw(ctx) {
+        ctx.save();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = this.color;
+        ctx.fillStyle = this.color;
+        ctx.roundRect(this.x * UNIT_SIZE + 5, this.y * UNIT_SIZE, UNIT_SIZE / 2, UNIT_SIZE / 2, UNIT_SIZE / 4);
+        ctx.stroke();
+        ctx.fillRect(this.x * UNIT_SIZE + 7.5, this.y * UNIT_SIZE + UNIT_SIZE / 2, UNIT_SIZE - 15, UNIT_SIZE / 2);
+
+        ctx.restore();
+
+
+    }
+}
 
 class AppleMagnet extends SnakeObject {
     static maxTime = POWERUP_TIME;
@@ -1297,14 +1560,18 @@ class Coin extends SnakeObject {
     draw(ctx) {
         ctx.save();
         ctx.beginPath();
+        ctx.lineWidth = 2;
 
-        ctx.fillStyle = COIN_COLOR
+        ctx.fillStyle = COIN_COLOR;
+        ctx.strokeStyle = COIN_COLOR;
         ctx.roundRect(this.x * UNIT_SIZE + 5, this.y * UNIT_SIZE + 5, UNIT_SIZE - 10, UNIT_SIZE - 10, (UNIT_SIZE - 10) / 2);
         ctx.fill();
-        ctx.strokeStyle = COIN_COLOR;
+
+
         ctx.roundRect(this.x * UNIT_SIZE, this.y * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE, UNIT_SIZE / 2);
         ctx.stroke();
         ctx.closePath();
+        ctx.lineWidth = 1;
         ctx.restore();
 
 
@@ -1314,8 +1581,9 @@ class Coin extends SnakeObject {
 
 
 class Apple extends SnakeObject {
-    constructor(x, y) {
+    constructor(x, y, isFrenzyApple = false) {
         super(x, y, APPLE);
+        this.isFrenzyApple = isFrenzyApple;
     }
 
 
@@ -1355,7 +1623,7 @@ class Ghost extends SnakeObject {
     }
 }
 class Frenzy extends SnakeObject {
-    static maxTime = POWERUP_TIME;
+    static maxTime = 150;
     constructor(x, y) {
         super(x, y, FRENZY);
         this.timerStarted = false;
@@ -1373,7 +1641,7 @@ class Frenzy extends SnakeObject {
         ctx.save();/*  w w  w .j a va 2 s  .c o m*/
         ctx.beginPath();
         ctx.moveTo(x, y);
-
+        ctx.lineWidth = 3;
         // top left edge
         ctx.lineTo(x - width / 2, y + height / 2);
 
@@ -1397,7 +1665,7 @@ class Frenzy extends SnakeObject {
         ctx.fillStyle = "rgb(" + randomR + "," + randomG + "," + randomB + ")";
 
         ctx.fillRect(this.x * UNIT_SIZE, this.y * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE);
-
+        ctx.lineWidth = 1;
         ctx.restore();
     }
 }
@@ -1412,7 +1680,8 @@ class Freeze extends SnakeObject {
     draw(ctx) {
         const x = this.x * UNIT_SIZE + UNIT_SIZE / 2;
         const y = this.y * UNIT_SIZE;
-        ctx.save();/*  w w  w .j a va 2 s  .c o m*/
+        ctx.save();
+        ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(x, y);
 
@@ -1520,17 +1789,17 @@ class Snake extends SnakeObject {
 class Spawner {
     timer = 0;
     objects = new Array(Coin, Coin, Coin, CoinMagnet, AppleMagnet, Ghost, Freeze, Freeze, Frenzy);
-
-
     constructor(map) {
         this.map = map;
         this.timerMax = 40;
         this.maxObjects = 4;
+
     }
 
     update() {
+        const minLength = 9; //the minimum length the snake has to be before spawning begins
         const objects = this.map.objects.filter(item => item.type != WALL && item.type != APPLE);
-        if (objects.length <= this.maxObjects && this.map.snake.length >= 9 && this.map.snake.length < GAME_UNITS / 3)
+        if (objects.length <= this.maxObjects && this.map.snake.length >= minLength && this.map.snake.length < GAME_UNITS / 3 && this.map.snake.currentState.type != FRENZY)
             this.timer++;
 
         if (this.timer >= this.timerMax) {
@@ -1591,7 +1860,7 @@ class GameMap {
 
         this.objects = new Array();
 
-        this.fillBorders();
+        this.fillWals();
     }
 
 
@@ -1601,6 +1870,13 @@ class GameMap {
     removeObjects(objects) {
         for (let i = 0; i < objects.length; i++) {
             this.objects = this.objects.filter(item => objects[i] != item);
+        }
+    }
+    removeAllObjects() {
+        for (let i = 0; i < this.objects.length; i++) {
+            if (this.objects[i].type != WALL && this.objects[i].type != APPLE) {
+                this.removeObject(this.objects[i]);
+            }
         }
     }
     addObject(object) {
@@ -1615,7 +1891,7 @@ class GameMap {
         this.snake.update(ctx);
 
     }
-    fillBorders() {
+    fillWals() {
 
         for (let x = game.minX - 1; x < TILE_WIDTH + game.minX; x++) {
             for (let y = game.minY - 1; y < TILE_HEIGHT + game.minY; y++) {
@@ -1667,7 +1943,6 @@ class GameMap {
 
         for (let i = 0; i < this.objects.length; i++) {
             if (this.snake.currentState.isObjectCollision(this.objects[i])) {
-                console.log("collided with " + this.objects[i].type)
                 game.currentState.handleCollision(this.objects[i]);
             }
 
@@ -1716,33 +1991,40 @@ class Game {
 
 
 
+
 }
 
 //-----------------------------------INPUT-------------------------------------------//
+function moveSnake(direction) {
 
-
-
-function onKeyDown(event, game) {
     if (game.currentState.type != ENDLESS && game.currentState.type != LEVEL) {
         return;
     }
-
-    if (event.keyCode == 32) {
-        game.isPaused = !game.isPaused;
-    }
-    //up
     const snake = game.currentState.snake;
 
-    if (event.keyCode == 38) {
+    if (direction == "U") {
         if (snake.changeY == 1 && snake.length > 1 && snake.currentState.type != FROZEN) {
             return;
         }
         snake.changeY = -1;
         snake.changeX = 0;
-
     }
-    //down
-    if (event.keyCode == 40) {
+    if (direction == "L") {
+        if (snake.changeX == 1 && snake.length > 1 && snake.currentState.type != FROZEN) {
+            return;
+        }
+        snake.changeY = 0;
+        snake.changeX = -1;
+    }
+    if (direction == "R") {
+        if (snake.changeX == -1 && snake.length > 1 && snake.currentState.type != FROZEN) {
+            return;
+        }
+        snake.changeX = 1;
+        snake.changeY = 0;
+    }
+
+    if (direction == "D") {
         if (snake.changeY == -1 && snake.length > 1 && snake.currentState.type != FROZEN) {
             return;
         }
@@ -1751,25 +2033,32 @@ function onKeyDown(event, game) {
 
     }
 
+
+}
+
+
+function onKeyDown(event) {
+    //up
+    if (event.keyCode == 38) {
+        moveSnake("U");
+
+    }
+    //down
+    if (event.keyCode == 40) {
+        moveSnake("D")
+
+    }
+
     //left
     if (event.keyCode == 37) {
-        if (snake.changeX == 1 && snake.length > 1 && snake.currentState.type != FROZEN) {
-            return;
-        }
-        snake.changeY = 0;
-        snake.changeX = -1;
-
+        moveSnake("L")
     }
+
     //right
     if (event.keyCode == 39) {
-        if (snake.changeX == -1 && snake.length > 1 && snake.currentState.type != FROZEN) {
-            return;
-        }
-        snake.changeX = 1;
-        snake.changeY = 0;
+        moveSnake("R");
 
     }
-
 
 
 }
@@ -1817,6 +2106,8 @@ function onLevelsPress() {
     toggleScreen("main-menu", false);
     toggleScreen("levels", true);
     toggleScreen("level-game-over", false);
+
+
     game.changeState(new Levels());
 }
 
@@ -1824,6 +2115,11 @@ function onMainMenuPress() {
     toggleScreen("game-over", false);
     toggleScreen("main-menu", true);
     toggleScreen("levels", false);
+    toggleScreen("level-game-over", false);
+
+    toggleScreen("helpA", false);
+    toggleScreen("helpB", false);
+
 
     game.changeState(new MainMenu());
 }
@@ -1848,19 +2144,94 @@ function onNextLevelPress() {
     }
 
 }
+
+function onHelpPress() {
+    toggleScreen("main-menu", false);
+    toggleScreen("helpA", true);
+
+    game.changeState(new HelpA());
+}
+
+function onHelpNextPress() {
+    toggleScreen("helpA", false);
+    toggleScreen("helpB", true);
+    game.changeState(new HelpB());
+
+
+}
+function onHelpBackPress() {
+    toggleScreen("helpB", false);
+    toggleScreen("helpA", true);
+    game.changeState(new HelpA());
+
+
+}
 function main() {
     toggleScreen("game-over", false);
     toggleScreen("level-game-over", false);
     toggleScreen("levels", false);
-    if (detectMobile() == true) {
-        canvas.width = "50%"
-        canvas.height = canvas.width * 0.5;
+    toggleScreen("helpA", false);
+    toggleScreen("helpB", false);
+
+
+    if (isMobile == true) {
+        const wrapper = document.getElementById("wrapper");
+        wrapper.style.width = 200
+        canvas.height = 600;
+
+
+        //create and append up buton
+        var button = document.createElement("button");
+        button.id = "control-button";
+        button.onclick = () => moveSnake("U");
+
+        var node = document.createTextNode("↑");
+        button.appendChild(node);
+        var element = document.getElementById("up");
+        element.appendChild(button);
+
+
+
+        //create and append down button
+        var button = document.createElement("button");
+        button.id = "control-button";
+        button.onclick = () => moveSnake("D");
+
+        var node = document.createTextNode("↓");
+        button.appendChild(node);
+        var element = document.getElementById("down");
+        element.appendChild(button);
+
+
+
+        //create and append left button
+        var button = document.createElement("button");
+        button.id = "control-button";
+        button.onclick = () => moveSnake("L");
+        var node = document.createTextNode("←");
+        button.appendChild(node);
+        var element = document.getElementById("left");
+        element.appendChild(button);
+
+
+        //create and append right button
+        var button = document.createElement("button");
+        button.id = "control-button";
+        button.onclick = () => moveSnake("R");
+
+        var node = document.createTextNode("→");
+        button.appendChild(node);
+        var element = document.getElementById("right");
+        element.appendChild(button);
+
+
+
     }
     for (let i = 0; i < LEVEL_COUNT; i++) {
         const button = document.createElement("button");
         const node = document.createTextNode(i + 1);
-        button.style.width = "60px";
-        button.style.height = "60px";
+        button.style.width = isMobile ? "40px" : "60px";
+        button.style.height = isMobile ? "40px" : "60px";
         button.style.backgroundColor = "rgb(51,51,51)";
         // button.style.float = "left"
 
@@ -1874,9 +2245,14 @@ function main() {
         element.appendChild(button);
     }
 
+
+
+
+
+
 }
 const game = new Game(ctx);
 
-document.body.addEventListener('keydown', (e) => onKeyDown(e, game));
+document.body.addEventListener('keydown', onKeyDown);
 
 main();

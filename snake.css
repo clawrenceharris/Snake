@@ -6,7 +6,7 @@
      justify-content: center;
      align-items: center;
      background-color: rgb(20, 27, 40);
-
+     touch-action: manipulation;
  }
 
  canvas {
@@ -26,6 +26,8 @@
      justify-content: center;
      width: 600px;
      height: 600px;
+
+
  }
 
  button {
@@ -33,32 +35,56 @@
      border-radius: 10px;
      background-color: rgb(51, 51, 51);
      color: white;
-     font-size: medium;
+     font-size: 80%;
      height: 40px;
      margin-bottom: 20px;
      padding: 10px 25px;
      border: 1px solid white;
      margin: 10px;
      cursor: pointer;
+     max-width: 150px;
 
  }
 
  button:hover {
-     background-color: rgb(100, 100, 100);
+     background-color: rgb(70, 70, 70);
  }
 
  #level-buttons-container {
-     margin-top: 90px;
+
      grid-template-columns: 1fr 1fr 1fr 1fr;
      display: grid;
  }
 
  .back-button {
+
      position: absolute;
-     top: 10px;
+     top: 0px;
      left: 15px;
-     width: 130px;
+     width: 100px;
      align-items: center;
+     justify-content: center;
+ }
+
+ .next-button {
+     position: absolute;
+     top: 0px;
+     right: 15px;
+     width: 100px;
+     align-items: center;
+     justify-content: center;
+ }
+
+ #control-button {
+     border: none;
+     background-color: rgb(6, 13, 25);
+     width: 100px;
+     height: 60px;
+ }
+
+ #controls {
+     width: 100%;
+     display: grid;
      justify-content: center;
  }
 
@@ -69,10 +95,25 @@
      padding-bottom: 10px;
      border-radius: 20px;
      display: flex;
-     width: 50%;
+
      align-items: center;
      justify-content: center;
      flex-direction: column;
+ }
+
+ #left-right {
+     display: flex
+ }
+
+ #up {
+     display: flex;
+     justify-content: center;
+ }
+
+
+ #down {
+     display: flex;
+     justify-content: center;
  }
 
  #game {

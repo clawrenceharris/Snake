@@ -12,6 +12,7 @@
  canvas {
      background-color: rgb(13, 30, 58);
      width: 100%;
+     border-radius: 20px;
  }
 
  h1 {
@@ -19,27 +20,23 @@
  }
 
  .screen-container {
-     margin-top: 30px;
      display: grid;
      position: absolute;
-     align-content: center;
+     align-items: center;
      justify-content: center;
      width: 600px;
-     height: 600px;
-
-
  }
 
  button {
 
      border-radius: 10px;
-     background-color: rgb(51, 51, 51);
+     background-color: rgba(51, 51, 51, 0.5);
      color: white;
      font-size: 80%;
      height: 40px;
      margin-bottom: 20px;
      padding: 10px 25px;
-     border: 1px solid white;
+     border: 1px solid rgba(255, 255, 255, 0.8);
      margin: 10px;
      cursor: pointer;
      max-width: 150px;
@@ -47,33 +44,21 @@
  }
 
  button:hover {
-     background-color: rgb(70, 70, 70);
+     background-color: rgba(100, 100, 100, 0.8);
  }
 
  #level-buttons-container {
-
      grid-template-columns: 1fr 1fr 1fr 1fr;
      display: grid;
  }
 
  .back-button {
 
-     position: absolute;
-     top: 0px;
-     left: 15px;
      width: 100px;
-     align-items: center;
-     justify-content: center;
+     align-self: center;
+
  }
 
- .next-button {
-     position: absolute;
-     top: 0px;
-     right: 15px;
-     width: 100px;
-     align-items: center;
-     justify-content: center;
- }
 
  #control-button {
      border: none;
@@ -90,15 +75,26 @@
 
  #wrapper {
      background-color: rgb(6, 13, 25);
-     padding-left: 10px;
-     padding-right: 10px;
-     padding-bottom: 10px;
+     border-radius: 20px;
+     padding: 10px;
+ }
+
+ #canvas-container {
+     background-color: rgb(13, 30, 58);
+     width: 600px;
+     height: 650px;
      border-radius: 20px;
      display: flex;
-
      align-items: center;
      justify-content: center;
      flex-direction: column;
+
+ }
+
+ #helpA,
+ #helpB {
+     position: relative;
+
  }
 
  #left-right {
@@ -114,8 +110,4 @@
  #down {
      display: flex;
      justify-content: center;
- }
-
- #game {
-     border-radius: 20px;
  }

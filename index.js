@@ -67,7 +67,7 @@ const FREEZE_TIME = 40;
 
 //--------------------------------GLOBAL VARIABLES----------------------------------------------//
 
-const canvas = document.getElementById("game");
+const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext('2d');
 const isMobile = detectMobile();
 let bestLength = 0;
@@ -702,7 +702,7 @@ class GameOver extends GameState {
         ctx.fillStyle = "white";
         ctx.textAlign = "center"
         ctx.font = "22px " + FONTFACE;
-        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - BUTTON_HEIGHT * 3);
+        ctx.fillText(GAME_OVER, canvas.width / 2, canvas.height / 2 - BUTTON_HEIGHT * 3);
         ctx.fillText("Length: " + this.snake.length, canvas.width / 2, canvas.height / 2 - BUTTON_HEIGHT * 3 + 30);
 
 
@@ -820,7 +820,7 @@ class LevelGameOver extends GameState {
 
         }
         else {
-            ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - BUTTON_HEIGHT * 3);
+            ctx.fillText(GAME_OVER, canvas.width / 2, canvas.height / 2 - BUTTON_HEIGHT * 3);
         }
 
 
@@ -1623,7 +1623,7 @@ class Ghost extends SnakeObject {
     }
 }
 class Frenzy extends SnakeObject {
-    static maxTime = 150;
+    static maxTime = POWERUP_TIME;
     constructor(x, y) {
         super(x, y, FRENZY);
         this.timerStarted = false;
@@ -2175,9 +2175,13 @@ function main() {
 
 
     if (isMobile == true) {
+
+
+
+
         const wrapper = document.getElementById("wrapper");
-        wrapper.style.width = 200
-        canvas.height = 600;
+        wrapper.style.width = "100%";
+        wrapper.style.height = "100%"
 
 
         //create and append up buton
@@ -2210,7 +2214,7 @@ function main() {
         button.onclick = () => moveSnake("L");
         var node = document.createTextNode("←");
         button.appendChild(node);
-        var element = document.getElementById("left");
+        var element = document.getElementById("left-right");
         element.appendChild(button);
 
 
@@ -2221,7 +2225,7 @@ function main() {
 
         var node = document.createTextNode("→");
         button.appendChild(node);
-        var element = document.getElementById("right");
+        var element = document.getElementById("left-right");
         element.appendChild(button);
 
 
@@ -2232,8 +2236,6 @@ function main() {
         const node = document.createTextNode(i + 1);
         button.style.width = isMobile ? "40px" : "60px";
         button.style.height = isMobile ? "40px" : "60px";
-        button.style.backgroundColor = "rgb(51,51,51)";
-        // button.style.float = "left"
 
         button.onclick = (e) => {
             toggleScreen("levels", false);

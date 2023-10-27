@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake 2</title>
     <link rel="stylesheet" href="snake.css">
-    <link rel="icon" type="image/png" href="./key.png" />
+    <link rel="icon" type="image/png" href="./favicon.png" />
 </head>
 
 <body>
@@ -14,7 +14,6 @@
 
     <audio id="apple-crunch" src="sounds/apple-crunch.mp3"></audio>
     <audio id="ghost" src="sounds/ghost.mp3"></audio>
-
     <audio id="magnet" src="sounds/magnet.mp3"></audio>
     <audio id="coin" src="sounds/coin.mp3"></audio>
     <audio id="one-way" src="sounds/one-way.mp3"></audio>
@@ -23,62 +22,74 @@
     <audio id="frenzy" src=" sounds/frenzy.mp3"></audio>
     <audio id="key" src=" sounds/key.mp3"></audio>
 
-
     <div id="wrapper">
+
         <h2 style="color: #fff; font-family: sans-serif; text-align: center;">Snake 2</h2>
 
-        <canvas id="game" width="580" height="620"></canvas>
+        <div id="canvas-container">
+
+
+            <canvas id="canvas" width="580" height="620">
+
+
+
+
+            </canvas>
 
 
 
 
 
 
-        <div id="main-menu" class="screen-container">
-            <button onclick=onEndlessPress()>ENDLESS</button>
-            <button onclick=onLevelsPress()>LEVELS</button>
-            <button onclick=onHelpPress()>HELP</button>
+            <div id="main-menu" style="position: absolute;" class="screen-container">
+                <button onclick=onEndlessPress()>ENDLESS</button>
+                <button onclick=onLevelsPress()>LEVELS</button>
+                <button onclick=onHelpPress()>HELP</button>
 
-        </div>
-        <div id="game-over" class="screen-container">
-            <button onclick=onMainMenuPress()>MAIN MENU</button>
+            </div>
+            <div id="game-over" class="screen-container">
+                <button onclick=onMainMenuPress()>MAIN MENU</button>
 
-            <button onclick=onRestartEndlessPress()>PLAY AGAIN</button>
-        </div>
-        <div id="level-game-over" class="screen-container">
-            <button onclick=onRestartLevelPress()>PLAY AGAIN</button>
-            <button onclick=onNextLevelPress()>NEXT LEVEL</button>
-
-            <button class="back-button" onclick=onMainMenuPress()>
-                BACK
-            </button>
-
-        </div>
-
-        <div id="helpA" class="screen-container">
-
-            <button class="back-button" onclick=onMainMenuPress()>BACK</button>
-            <button class="next-button" onclick=onHelpNextPress()>NEXT</button>
+                <button onclick=onRestartEndlessPress()>PLAY AGAIN</button>
 
 
-        </div>
-        <div id="helpB" class="screen-container">
+            </div>
+            <div id="level-game-over" class="screen-container">
+                <button onclick=onLevelsPress()> LEVELS </button>
 
-            <button class="back-button" onclick=onHelpBackPress()>BACK</button>
+                <button onclick=onRestartLevelPress()>PLAY AGAIN</button>
+                <button onclick=onNextLevelPress()>NEXT LEVEL</button>
 
-        </div>
 
-        <div id="levels" class="screen-container">
-            <button class="back-button" onclick=onMainMenuPress()>
-                BACK
-            </button>
 
-            <div id="level-buttons-container">
+            </div>
+            <div id="levels" class="screen-container">
+                <button class="back-button" onclick=onMainMenuPress()> BACK </button>
+
+                <div id="level-buttons-container">
+
+                </div>
+
+            </div>
+            <div id="helpA" class="screen-container">
+                <div style="display: flex;">
+
+                    <button onclick=onMainMenuPress()>BACK</button>
+                    <button onclick=onHelpNextPress()>NEXT</button>
+
+                </div>
+
+
+            </div>
+            <div id="helpB" class="screen-container">
+
+                <button onclick=onHelpBackPress()>BACK</button>
 
             </div>
 
-        </div>
 
+
+        </div>
 
     </div>
     <div id="controls">

@@ -43,7 +43,7 @@ const HELP = "HELP"
 const RESTART = "PLAY AGAIN";
 
 
-const SPEED = 9;
+const SPEED = 8;
 const LEVEL_COUNT = 15;
 const POINTS_PER_COIN = 50;
 const POINTS_PER_APPLE = 6;
@@ -1070,54 +1070,6 @@ class Level extends GameState {
 
 
 }
-const level = [
-
-
-    {
-        width: 29,
-        startLength: 1,
-        height: 29,
-        numCoins: 3,
-        numApples: 5,
-        snakeX: 2,
-        snakeY: 27,
-        map: [
-            "11111111111111111111111111111",
-            "15000000000000000000000000051",
-            "10111111111111111111111111101",
-            "10100000000000000000000000101",
-            "10101111111111111111111110101",
-            "10101000000000000000000010101",
-            "10101011111111111111111010101",
-            "10101010000000000000001010101",
-            "10101010111111111111101010101",
-            "10101010111111111111101010101",
-            "10101010111111111111101010101",
-            "10101010111111111111101010101",
-            "10101010111100000111101010101",
-            "10101010111101110111101010101",
-            "10101010111101310111101010101",
-            "10001010111101110111101010101",
-            "10101010111100000111101010101",
-            "10101010111111111111101010101",
-            "10101010111111111111101010101",
-            "10101010111111111111101010101",
-            "10101010111111111111101010101",
-            "10101010000000000000001010101",
-            "10101011111111111111111010101",
-            "10101000000000000000000010101",
-            "10101111111111111111111110101",
-            "10100000000000000000000000101",
-            "10111111111111111111111111101",
-            "14000000000000000000000000051",
-            "11111111111111111111111111111",
-
-
-
-        ]
-    },
-
-]
 
 class Levels extends GameState {
     constructor() {
@@ -2180,53 +2132,64 @@ function main() {
 
 
 
-        const wrapper = document.getElementById("wrapper");
-        wrapper.style.width = "100%";
-        wrapper.style.height = "100%"
+        const container = document.getElementById("canvas-container");
+        container.style.width = "100%";
+        container.style.height = "100%"
 
 
         //create and append up buton
         var button = document.createElement("button");
-        button.id = "control-button";
+        button.className = "control-button";
+        button.id = "up";
+
         button.onclick = () => moveSnake("U");
 
         var node = document.createTextNode("↑");
         button.appendChild(node);
-        var element = document.getElementById("up");
+        var element = document.getElementById("up-container");
         element.appendChild(button);
 
 
 
         //create and append down button
         var button = document.createElement("button");
-        button.id = "control-button";
+        button.className = "control-button";
+        button.id = "down";
+
         button.onclick = () => moveSnake("D");
 
         var node = document.createTextNode("↓");
         button.appendChild(node);
-        var element = document.getElementById("down");
+        var element = document.getElementById("down-container");
         element.appendChild(button);
 
 
 
         //create and append left button
         var button = document.createElement("button");
-        button.id = "control-button";
+        button.className = "control-button";
+        button.id = "left";
+
         button.onclick = () => moveSnake("L");
         var node = document.createTextNode("←");
         button.appendChild(node);
-        var element = document.getElementById("left-right");
+        var element = document.getElementById("left-right-container");
         element.appendChild(button);
 
+        //create and add middle div
+        var div = document.createElement("div");
+
+        div.className = "control-button";
+        element.appendChild(div);
 
         //create and append right button
         var button = document.createElement("button");
-        button.id = "control-button";
+        button.id = "right";
+        button.className = "control-button";
         button.onclick = () => moveSnake("R");
 
         var node = document.createTextNode("→");
         button.appendChild(node);
-        var element = document.getElementById("left-right");
         element.appendChild(button);
 
 

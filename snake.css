@@ -7,6 +7,7 @@
      align-items: center;
      background-color: rgb(20, 27, 40);
      touch-action: manipulation;
+     background-color: rgb(20, 27, 40);
  }
 
  canvas {
@@ -15,9 +16,28 @@
      border-radius: 20px;
  }
 
- h1 {
-     font-family: sans-serif;
+ #wrapper2 {
+     background-color: rgb(6, 13, 25);
+     padding: 10px;
+     border-radius: 20px;
  }
+
+ h2 {
+     font-family: sans-serif;
+
+
+ }
+
+
+ header {
+     background-color: rgb(6, 13, 25);
+     padding: 10px;
+     border-radius: 50px;
+     width: 250px;
+     margin-bottom: 20px;
+ }
+
+
 
  .screen-container {
      display: grid;
@@ -60,21 +80,30 @@
  }
 
 
- #control-button {
+ .control-button {
      border: none;
-     background-color: rgb(6, 13, 25);
-     width: 100px;
-     height: 60px;
+     background-color: rgba(255, 255, 255, 0.035);
+     width: 70px;
+     height: 70px;
+     border-radius: 0px;
+     margin: 0;
+
  }
+
+ .control-button:hover {
+     background-color: rgba(255, 255, 255, 0.07);
+ }
+
 
  #controls {
      width: 100%;
      display: grid;
      justify-content: center;
+     margin-top: 10px;
  }
 
  #wrapper {
-     background-color: rgb(6, 13, 25);
+     background-color: rgb(13, 30, 58);
      border-radius: 20px;
      padding: 10px;
  }
@@ -94,20 +123,41 @@
  #helpA,
  #helpB {
      position: relative;
-
+     width: 100%
  }
 
- #left-right {
-     display: flex
+ #left-right-container {
+     display: flex;
+ }
+
+ #left {
+     border-top-left-radius: 15px;
+     border-bottom-left-radius: 15px;
+ }
+
+ #right {
+     border-top-right-radius: 15px;
+     border-bottom-right-radius: 15px;
+ }
+
+ #up-container {
+     display: flex;
+     justify-content: center;
+
  }
 
  #up {
+     border-top-right-radius: 15px;
+     border-top-left-radius: 15px;
+ }
+
+ #down-container {
      display: flex;
      justify-content: center;
  }
 
-
  #down {
-     display: flex;
-     justify-content: center;
+
+     border-bottom-right-radius: 15px;
+     border-bottom-left-radius: 15px;
  }

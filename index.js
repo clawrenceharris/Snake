@@ -1642,6 +1642,7 @@ class Frenzy extends SnakeObject {
         ctx.beginPath();
         ctx.moveTo(x, y);
         ctx.lineWidth = 3;
+
         // top left edge
         ctx.lineTo(x - width / 2, y + height / 2);
 

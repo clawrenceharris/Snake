@@ -76,15 +76,15 @@ let highscore = 0;
 let speed = SPEED;
 let currentLevel = 0;
 
-let appleSound = document.querySelector('#apple-crunch');
-let ghostSound = document.querySelector('#ghost');
-let magnetSound = document.querySelector('#magnet');
-let coinSound = document.querySelector('#coin');
-let victorySound = document.querySelector("#victory");
-let oneWaySound = document.querySelector("#one-way");
-let freezeSound = document.querySelector("#freeze");
-let frenzySound = document.querySelector("#frenzy");
-let keySound = document.querySelector("#key")
+let appleSound = new Audio('./sounds/apple.mp3');
+let ghostSound = new Audio('./sounds/ghost.mp3');
+let magnetSound = new Audio('./sounds/magnet.mp3');
+let coinSound = new Audio('./sounds/coin.mp3');
+let victorySound = new Audio('./sounds/victory.mp3');
+let oneWaySound = new Audio('./sounds/one-way.mp3');
+let freezeSound = new Audio('./sounds/freeze.mp3');
+let frenzySound = new Audio('./sounds/frenzy.mp3');
+let keySound = new Audio('./sounds/key.mp3');
 //--------------------------------SNAKE STATES----------------------------------------------//
 
 

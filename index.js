@@ -44,7 +44,7 @@ const RESTART = "PLAY AGAIN";
 
 
 const SPEED = 8;
-const LEVEL_COUNT = 15;
+const LEVEL_COUNT = 16;
 const POINTS_PER_COIN = 50;
 const POINTS_PER_APPLE = 6;
 
@@ -554,15 +554,15 @@ class HelpA extends GameState {
         var y = 6 * UNIT_SIZE + 14;
 
 
-        var lastY = wrapText(ctx, "Apple: Eat an Apple to grow your snake body and", x, y, canvas.width - 20);
-        wrapText(ctx, "increase your score by " + POINTS_PER_APPLE + " points.", x, lastY + 20, canvas.width - 20);
+        var lastY = wrapText(ctx, "Apple: Eat an Apple to grow your snake body and increase your ", x, y, canvas.width - 20);
+        wrapText(ctx, "score by " + POINTS_PER_APPLE + " points.", x, lastY + 20, canvas.width - 20);
 
         var y = 9 * UNIT_SIZE + 14;
         wrapText(ctx, "Coin: Collecting a Coin increases your score by " + POINTS_PER_COIN + " points.", x, y, canvas.width - 20);
 
         var y = 12 * UNIT_SIZE + 14;
 
-        var lastY = wrapText(ctx, "Freeze: Entering a Freeze stops the snake head in place, while the ", x, y, canvas.width - 20);
+        var lastY = wrapText(ctx, "Freeze: Entering a Freeze stops the snake's head in place, while its ", x, y, canvas.width - 20);
         wrapText(ctx, "body keeps moving!", x, lastY + 20, canvas.width - 20);
 
         var y = 15 * UNIT_SIZE + 14;
@@ -921,6 +921,23 @@ class Level extends GameState {
             }
         }
     }
+    fillKeys() {
+        for (let y = 0; y < this.levelData.map.length; y++) {
+            for (let x = 0; x < this.levelData.map[0].length; x++) {
+                switch (this.levelData.map[y][x]) {
+
+                    case "K":
+                        this.map.addObject(new Key(x + game.minX, y + game.minY, "green"));
+                        break;
+
+                    case "k":
+                        this.map.addObject(new Key(x + game.minX, y + game.minY, "pink"));
+                        break;
+
+                }
+            }
+        }
+    }
     fillMap() {
 
         // C = coin 0 = empty 1 = wall  3 = apple 4 = finish
@@ -942,23 +959,17 @@ class Level extends GameState {
                     case "6":
                         this.map.addObject(new OneWay(x + game.minX, y + game.minY))
                         break;
-                    case "C":
-                        this.map.addObject(new Coin(x + game.minX, y + game.minY));
-                        break;
+
                     case "D":
                         this.map.addObject(new Door(x + game.minX, y + game.minY, "green"));
                         break;
                     case "d":
                         this.map.addObject(new Door(x + game.minX, y + game.minY, "pink"));
                         break;
-                    case "K":
-                        this.map.addObject(new Key(x + game.minX, y + game.minY, "green"));
-                        break;
 
-                    case "k":
-                        this.map.addObject(new Key(x + game.minX, y + game.minY, "pink"));
+                    case "C":
+                        this.map.addObject(new Coin(x + game.minX, y + game.minY, "yellow"));
                         break;
-
 
 
                 }
@@ -970,6 +981,7 @@ class Level extends GameState {
         this.map = new GameMap(this.snake);
         this.fillWals();
         this.fillMap();
+        this.fillKeys();
 
 
     }
@@ -1434,8 +1446,8 @@ class Key extends SnakeObject {
     draw(ctx) {
         ctx.save();
         ctx.lineWidth = 3;
-        ctx.strokeStyle = this.color;
-        ctx.fillStyle = this.color;
+        ctx.strokeStyle = "green";
+        ctx.fillStyle = "green";
         ctx.roundRect(this.x * UNIT_SIZE + 5, this.y * UNIT_SIZE, UNIT_SIZE / 2, UNIT_SIZE / 2, UNIT_SIZE / 4);
         ctx.stroke();
         ctx.fillRect(this.x * UNIT_SIZE + 7.5, this.y * UNIT_SIZE + UNIT_SIZE / 2, UNIT_SIZE - 15, UNIT_SIZE / 2);
@@ -1500,8 +1512,9 @@ class CoinMagnet extends SnakeObject {
 class Coin extends SnakeObject {
     static maxTime = POWERUP_TIME;
 
-    constructor(x, y) {
+    constructor(x, y, color) {
         super(x, y, COIN);
+        this.color = color;
     }
 
     update(ctx) {
@@ -2130,11 +2143,20 @@ function main() {
     if (isMobile == true) {
 
 
+        const buttons = document.getElementsByTagName("button");
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].style.height = "30px";
+            buttons[i].style.marginBottom = "10px";
+
+        }
 
 
-        const container = document.getElementById("canvas-container");
-        container.style.width = "100%";
-        container.style.height = "100%"
+        const wrapper = document.getElementById("wrapper2");
+        wrapper.style.width = "100%";
+        wrapper.style.height = "100%";
+        const levelsContainer = document.getElementById("levels");
+        levelsContainer.style.height = "60%";
+        levelsContainer.style.width = "100%";
 
 
         //create and append up buton
@@ -2213,12 +2235,12 @@ function main() {
 
 
 
+    document.body.addEventListener('keydown', onKeyDown);
 
 
 
 }
 const game = new Game(ctx);
 
-document.body.addEventListener('keydown', onKeyDown);
 
 main();

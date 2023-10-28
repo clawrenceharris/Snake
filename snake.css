@@ -19,6 +19,7 @@
  #wrapper2 {
      background-color: rgb(6, 13, 25);
      padding: 10px;
+     width: 55%;
      border-radius: 20px;
  }
 
@@ -31,19 +32,23 @@
 
 
 
-
+ #levels {
+     height: 100%
+ }
 
  .screen-container {
      display: grid;
      position: absolute;
      align-items: center;
      justify-content: center;
-     width: 600px;
+     width: 55%;
+
  }
 
  button {
 
      border-radius: 10px;
+
      background-color: rgba(51, 51, 51, 0.5);
      color: white;
      font-size: 80%;
@@ -63,12 +68,18 @@
  }
 
  #level-buttons-container {
-     grid-template-columns: 1fr 1fr 1fr 1fr;
+     grid-template-columns: auto auto auto auto;
      display: grid;
+     column-gap: 10px;
+     width: 50%;
+
+
  }
 
  .back-button {
-
+     position: absolute;
+     top: 15px;
+     left: 15px;
      width: 100px;
      align-self: center;
 
@@ -105,13 +116,12 @@
 
  #canvas-container {
      background-color: rgb(13, 30, 58);
-     width: 90%;
+     width: 100%;
      height: 100%;
      border-radius: 20px;
      display: flex;
      align-items: center;
      justify-content: center;
-     flex-direction: column;
 
  }
 

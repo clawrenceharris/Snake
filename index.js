@@ -44,7 +44,7 @@ const RESTART = "PLAY AGAIN";
 
 
 const SPEED = 8;
-const LEVEL_COUNT = 16;
+const LEVEL_COUNT = 15;
 const POINTS_PER_COIN = 50;
 const POINTS_PER_APPLE = 6;
 

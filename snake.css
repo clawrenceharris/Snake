@@ -23,19 +23,13 @@
  }
 
  h2 {
-     font-family: sans-serif;
-
-
+     font-family: Verdana, sans-serif;
+     color: #fff;
+     text-align: center;
  }
 
 
- header {
-     background-color: rgb(6, 13, 25);
-     padding: 10px;
-     border-radius: 50px;
-     width: 250px;
-     margin-bottom: 20px;
- }
+
 
 
 
@@ -54,10 +48,11 @@
      color: white;
      font-size: 80%;
      height: 40px;
-     margin-bottom: 20px;
+     justify-content: center;
+     align-items: center;
+     margin: 10px;
      padding: 10px 25px;
      border: 1px solid rgba(255, 255, 255, 0.8);
-     margin: 10px;
      cursor: pointer;
      max-width: 150px;
 
@@ -110,8 +105,8 @@
 
  #canvas-container {
      background-color: rgb(13, 30, 58);
-     width: 600px;
-     height: 650px;
+     width: 90%;
+     height: 100%;
      border-radius: 20px;
      display: flex;
      align-items: center;
